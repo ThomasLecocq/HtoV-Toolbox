@@ -11,7 +11,7 @@
 
 from copy import deepcopy
 from math import ceil
-from mtspec import mtspec, sine_psd
+# from mtspec import mtspec, sine_psd
 import numpy as np
 from obspy.core.util import scoreatpercentile as quantile
 from obspy.signal.filter import highpass, lowpass, bandpass
@@ -132,7 +132,7 @@ def calculateCharacteristicNoiseFunction(stream, threshold, window_length,
     for data in charNoiseFunctions:
         length = len(data)
         s_data = np.sort(data)
-        thresholds.append(s_data[threshold * length])
+        thresholds.append(s_data[int(threshold * length)])
     return charNoiseFunctions, thresholds
 
 
@@ -205,7 +205,7 @@ def findCommonQuietAreas(areas, length, min_length):
     return common_quiet_times
 
 def calculateHVSR(stream, intervals, window_length, method, options,
-                  master_method, cutoff_value, smoothing=None,
+                  master_method, cutoff_value, smoothing='konno-ohmachi',
                   smoothing_count=1, smoothing_constant=40,
                   message_function=None):
     """
@@ -371,7 +371,7 @@ def calculateHVSR(stream, intervals, window_length, method, options,
     # Only senseful for mean calculations. Omitted for the median.
     if cutoff_value != 0.0 and master_method != 'median':
         hvsr_matrix = hvsr_matrix[int(length * cutoff_value):
-                              ceil(length * (1 - cutoff_value)), :]
+                              int(ceil(length * (1 - cutoff_value))), :]
     length = len(hvsr_matrix)
     # Mean.
     if master_method == 'mean':
