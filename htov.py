@@ -215,7 +215,12 @@ def calculateHVSR(stream, intervals, window_length, method, options,
     length = len(intervals)
     good_length = window_length // 2 + 1
     # Create the matrix that will be used to store the single spectra.
+    
+    #TLQ
+    good_length = int(2**(nextpow2(window_length)-1))
     hvsr_matrix = np.empty((length, good_length))
+    
+    # hvsr_matrix = np.empty((length, good_length))
     # The stream that will be used.
     # XXX: Add option to use the raw data stream.
     if method == 'multitaper':

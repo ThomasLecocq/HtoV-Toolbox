@@ -3,7 +3,7 @@
 import numpy as np
 from obspy.core import UTCDateTime
 from scipy.signal.signaltools import detrend
-
+import scipy.fftpack
 
 def toQDateTime(dt):
     """
@@ -107,6 +107,9 @@ def getAreasWithinThreshold(c_funct, threshold, min_width, feather=0):
     return np.array(areas)
 
 
+def nextpow2(x):
+    return np.ceil(np.log2(np.abs(x)))
+    
 def single_taper_spectrum(data, delta, taper_name=None):
     """
     Returns the spectrum and the corresponding frequencies for data with the
@@ -116,7 +119,7 @@ def single_taper_spectrum(data, delta, taper_name=None):
     good_length = length // 2 + 1
     # Create the frequencies.
     # XXX: This might be some kind of hack
-    freq = abs(np.fft.fftfreq(length, delta)[:good_length])
+    
     # Create the tapers.
     if taper_name == 'bartlett':
         taper = np.bartlett(length)
@@ -138,5 +141,10 @@ def single_taper_spectrum(data, delta, taper_name=None):
     data = detrend(data)
     # Apply the taper.
     data *= taper
-    spec = abs(np.fft.rfft(data)) ** 2
+    #TLQ HACK
+    nfft = int(2**nextpow2(len(data)))
+    # spec = abs(np.fft.rfft(data)) ** 2
+    # freq = abs(np.fft.fftfreq(length, delta)[:good_length])
+    freq = abs(scipy.fftpack.fftfreq(nfft, delta))[:nfft/2]
+    spec = abs(scipy.fftpack.rfft(data, n=nfft))[:nfft/2] ** 2
     return spec, freq
