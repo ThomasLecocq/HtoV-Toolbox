@@ -11,7 +11,7 @@
 
 from copy import deepcopy
 from math import ceil
-# from mtspec import mtspec, sine_psd
+from mtspec import mtspec, sine_psd
 import numpy as np
 from obspy.core.util import scoreatpercentile as quantile
 from obspy.signal.filter import highpass, lowpass, bandpass

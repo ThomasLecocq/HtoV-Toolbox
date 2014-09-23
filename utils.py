@@ -143,8 +143,8 @@ def single_taper_spectrum(data, delta, taper_name=None):
     data *= taper
     #TLQ HACK
     nfft = int(2**nextpow2(len(data)))
-    # spec = abs(np.fft.rfft(data)) ** 2
-    # freq = abs(np.fft.fftfreq(length, delta)[:good_length])
-    freq = abs(scipy.fftpack.fftfreq(nfft, delta))[:nfft/2]
-    spec = abs(scipy.fftpack.rfft(data, n=nfft))[:nfft/2] ** 2
+    spec = abs(np.fft.rfft(data)) ** 2
+    freq = abs(np.fft.fftfreq(length, delta)[:good_length])
+#    freq = abs(scipy.fftpack.fftfreq(nfft, delta))[:nfft/2]
+#    spec = abs(scipy.fftpack.rfft(data, n=nfft))[:nfft/2] ** 2
     return spec, freq
